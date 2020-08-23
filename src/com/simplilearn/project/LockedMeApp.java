@@ -6,14 +6,7 @@ import java.util.Scanner;
 public class LockedMeApp {
 
 	public static void main(String[] args) throws IOException {
-		System.out.println("===================================================================");
-		System.out.println("LOCKEDME.COM");
-		System.out.println();
-		System.out.println("Welcome to Digital Locker, Store your creds here");
-		System.out.println();
-		System.out.println("Developed by: Pooja Choudhary");
-		System.out.println("===================================================================");
-		System.out.println();
+		printWelcomeMessage();
 
 		Scanner sc = new Scanner(System.in);
 
@@ -46,198 +39,230 @@ public class LockedMeApp {
 				registerUser(name, loginId, password);
 
 			} else
-			// sprint 3
-			if (b == 1) {
+				// sprint 3
+				if (b == 1) {
 
-				String loginId;
-				String password;
+					String loginId;
+					String password;
 
-				System.out.println("\n");
-				System.out.println("===================================================================");
-				System.out.println("WELCOME TO THE LOGIN PAGE!");
-				System.out.println("===================================================================");
-				System.out.println("\n");
-				System.out.println("Enter your Login Id, Password ");
+					System.out.println("\n");
+					System.out.println("===================================================================");
+					System.out.println("WELCOME TO THE LOGIN PAGE!");
+					System.out.println("===================================================================");
+					System.out.println("\n");
+					System.out.println("Enter your Login Id, Password ");
 
-				loginId = sc.nextLine();
-				password = sc.nextLine();
+					loginId = sc.nextLine();
+					password = sc.nextLine();
 
-				// for checking in the file
-				boolean validLogin = loginUser(loginId, password);
-				if (validLogin) {
-					System.out.println("===============================================================");
-					System.out.println("Successfull Login");
-					System.out.println("===============================================================");
-					System.out.println();
-					int c = 1;
-
-					while (c != 0) {
-
-						Scanner scan = new Scanner(System.in);
-
-						System.out.println("Choose the option: ");
-						System.out.println("1. Fetch");
-						System.out.println("2. Store");
-						System.out.println("3. Remove");
-						System.out.println("4. Display All");
-						System.out.println("0. Exit");
-
-						c = scan.nextInt();
-						scan.nextLine();
-						System.out.println("Selected option is: " + c);
+					boolean validLogin = loginUser(loginId, password);
+					if (validLogin) {
+						System.out.println("===============================================================");
+						System.out.println("Successfull Login");
+						System.out.println("===============================================================");
 						System.out.println();
+						int c = 1;
 
-						if (c == 1) {
+						while (c != 0) {
 
-							System.out.println("===================================================================");
-							System.out.println("WELCOME TO THE FETCH PAGE!");
-							System.out.println("===================================================================");
+							Scanner scan = new Scanner(System.in);
+
+							printUserOptions();
+
+							c = scan.nextInt();
+							scan.nextLine();
+							System.out.println("Selected option is: " + c);
 							System.out.println();
-							System.out.println("Enter your site name for fetching details");
 
-							String usersiteinput = scan.nextLine();
-							fetchCredentials(loginId, usersiteinput);
+							if (c == 1) {
+								printFetchPrompt();
+								String usersiteinput = scan.nextLine();
+								fetchCredentials(loginId, usersiteinput);
 
-						} else if (c == 2) {
+							} else if (c == 2) {
+								System.out.println("Enter the site name: ");
+								Scanner inputsite = new Scanner(System.in);
+								String checksitename = inputsite.nextLine();
+								FileWriter fw = new FileWriter("D:/SimplilearnProject/CredStoreFile/" + loginId + ".txt",
+										true);
+								BufferedWriter bw = new BufferedWriter(fw);
+								PrintWriter pw = new PrintWriter(bw);
 
-							FileWriter fw = new FileWriter("D:/SimplilearnProject/CredStoreFile/" + loginId + ".txt",
-									true);
-							BufferedWriter bw = new BufferedWriter(fw);
-							PrintWriter pw = new PrintWriter(bw);
+								File file = new File("D:/SimplilearnProject/CredStoreFile/" + loginId + ".txt");
 
-							File file = new File("D:/SimplilearnProject/CredStoreFile/" + loginId + ".txt");
+								BufferedReader br = new BufferedReader(new FileReader(file));
 
-							BufferedReader br = new BufferedReader(new FileReader(file));
+								boolean flag = doAlreadyExists(checksitename, br);
+								if (flag == false) {
+									//
+									printStoreCredentialPrompt();
 
-							String st = br.readLine();
-							System.out.println("Enter the site name: ");
-							Scanner inputsite = new Scanner(System.in);
-							String checksitename = inputsite.nextLine();
+									System.out.println("Enter the User Name");
+									String input2 = sc.nextLine();
+									System.out.println("Enter your Password");
+									String input3 = sc.nextLine();
+									System.out.println("===============================================================");
+									System.out.println("Your credentials are stored successfully");
+									System.out.println("===============================================================");
+									System.out.println();
+									String storesite = checksitename;
+									String storeuname = input2;
+									String storepword = input3;
 
-							boolean flag = false;
-							while ((st = br.readLine()) != null) {
-								String input[] = st.split(",");
-								if (input[0].equals(checksitename)) {
-									flag = true;
+									pw.println(storesite + "," + storeuname + "," + storepword);
+								} else {
+									System.out.println("Credentials for the given site already exists. Please fetch it.");
+									System.out.println();
 								}
+
+								pw.close();
+								bw.close();
+								fw.close();
+								br.close();
 							}
-							if (flag == false) {
+
+							else if(c==3) {
 								//
-								System.out.println("Credential for the given site doesn't exist.");
-								System.out.println();
-								System.out
-										.println("===================================================================");
-								System.out.println("WELCOME TO THE STORE PAGE!");
-								System.out
-										.println("===================================================================");
-								System.out.println();
-								System.out.println("Enter your credentials in the below given form: ");
-								System.out.println();
-
-								// System.out.println("Enter the Site name");
-								// String input1 = sc.nextLine();
-								System.out.println("Enter the User Name");
-								String input2 = sc.nextLine();
-								System.out.println("Enter your Password");
-								String input3 = sc.nextLine();
-								System.out.println("===============================================================");
-								System.out.println("Your credentials are stored successfully");
-								System.out.println("===============================================================");
-								System.out.println();
-								String storesite = checksitename;
-								String storeuname = input2;
-								String storepword = input3;
-
-								pw.println(storesite + "," + storeuname + "," + storepword);
-							} else {
-								System.out.println("Credentials for the given site already exists. Please fetch it.");
-								System.out.println();
+								System.out.println("Enter the site name: ");
+								Scanner inputsite = new Scanner(System.in);
+								String deletesitedetails = inputsite.nextLine();
+								removeCredential(loginId, deletesitedetails);
 							}
 
-							pw.close();
-							bw.close();
-							fw.close();
-							br.close();
-						}
-						
-						else if(c==3) {
-							//
-							File inputFile = new File("D:/SimplilearnProject/CredStoreFile/" + loginId + ".txt");
-							File tempFile = new File("D:/SimplilearnProject/CredStoreFile/" + loginId + ".temp.txt");
-							BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-							BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-							//
-							System.out.println("Enter the site name: ");
-							Scanner inputsite = new Scanner(System.in);
-							String deletesitedetails = inputsite.nextLine();
-							//
-							String readinput = null;
-							boolean flag =false;
-							while((readinput = reader.readLine())!=null) {
+							else if(c==4) {
 
-								//String sitedetails[] = readinput.split(",");
-								String sitedetails = readinput.trim(); 
+								displayAllCredentials(loginId);
 
-								if(sitedetails.split(",")[0].equals(deletesitedetails)) { 
-									flag=true;
-									continue;
-								}
-								writer.write(readinput + System.getProperty("line.separator"));
 							}
-							if(!flag) {
-								System.out.println("This site doesn't exist");
-							}else
-								System.out.println("required creds deleted");
-							
-							writer.close();
-							reader.close();
-							System.out.println(inputFile.exists());
-							System.out.println(inputFile.delete());
-							boolean successful = tempFile.renameTo(inputFile);
-							System.out.println(successful);
+
 						}
-						
-						else if(c==4) {
-							
-							File displayfile = new File("D:/SimplilearnProject/CredStoreFile/"+ loginId + ".txt"); 
-							
-							BufferedReader display = new BufferedReader(new FileReader(displayfile));
-							
-							String dis = null;
-							
-							while((dis = display.readLine())!=null) {
-								
-								String input[] = dis.split(",");
-								
-								System.out.println("User Site:"+input[0]);
-								System.out.println("User Name:"+input[1]);
-								System.out.println("User Password:"+input[2]);
-								System.out.println();
-								
-						} 
-							display.close();
-							
-						}
-						
+
 					}
 
+					else {
+						System.out.println("Invalid Login id or Password");
+					}
 				}
+
 
 				else {
-					System.out.println("Invalid Login id or Password");
+					System.out.println("===============================================================");
+					System.out.println("You've successfully exited the page.");
+					System.out.println("===============================================================");
+					System.exit(0);
+					System.out.println();
 				}
-			}
-			
-			
-			else {
-				System.out.println("===============================================================");
-				System.out.println("You've successfully exited the page.");
-				System.out.println("===============================================================");
-				System.exit(0);
-				System.out.println();
-			}
 		}
 
+	}
+
+	private static void printFetchPrompt() {
+		System.out.println("===================================================================");
+		System.out.println("WELCOME TO THE FETCH PAGE!");
+		System.out.println("===================================================================");
+		System.out.println();
+		System.out.println("Enter your site name for fetching details");
+	}
+
+	private static void displayAllCredentials(String loginId) throws FileNotFoundException, IOException {
+		File displayfile = new File("D:/SimplilearnProject/CredStoreFile/"+ loginId + ".txt"); 
+
+		BufferedReader display = new BufferedReader(new FileReader(displayfile));
+
+		String dis = null;
+
+		while((dis = display.readLine())!=null) {
+
+			String input[] = dis.split(",");
+
+			System.out.println("User Site:"+input[0]);
+			System.out.println("User Name:"+input[1]);
+			System.out.println("User Password:"+input[2]);
+			System.out.println();
+
+		} 
+		display.close();
+	}
+
+	private static void removeCredential(String loginId, String deleteSiteDetails)
+			throws FileNotFoundException, IOException {
+		File inputFile = new File("D:/SimplilearnProject/CredStoreFile/" + loginId + ".txt");
+		File tempFile = new File("D:/SimplilearnProject/CredStoreFile/" + loginId + ".temp.txt");
+		BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+		
+		String readinput = null;
+		boolean flag =false;
+		while((readinput = reader.readLine())!=null) {
+
+			String sitedetails = readinput.trim(); 
+
+			if(sitedetails.split(",")[0].equals(deleteSiteDetails)) { 
+				flag=true;
+				continue;
+			}
+			writer.write(readinput + System.getProperty("line.separator"));
+		}
+
+		writer.close();
+		reader.close();
+		if(!flag) {
+			System.out.println("This site doesn't exist");
+		}else {
+			inputFile.delete();
+			boolean successful = tempFile.renameTo(inputFile);
+			if(successful) {
+				System.out.println("required creds deleted");
+			}
+		}
+	}
+
+	private static void printStoreCredentialPrompt() {
+		System.out.println("Credential for the given site doesn't exist.");
+		System.out.println();
+		System.out
+		.println("===================================================================");
+		System.out.println("WELCOME TO THE STORE PAGE!");
+		System.out
+		.println("===================================================================");
+		System.out.println();
+		System.out.println("Enter your credentials in the below given form: ");
+		System.out.println();
+	}
+
+	private static boolean doAlreadyExists(String siteName, BufferedReader fileReader) throws IOException {
+		String st = fileReader.readLine();
+
+
+
+		boolean flag = false;
+		while ((st = fileReader.readLine()) != null) {
+			String input[] = st.split(",");
+			if (input[0].equals(siteName)) {
+				flag = true;
+			}
+		}
+		return flag;
+	}
+
+	private static void printUserOptions() {
+		System.out.println("Choose the option: ");
+		System.out.println("1. Fetch");
+		System.out.println("2. Store");
+		System.out.println("3. Remove");
+		System.out.println("4. Display All");
+		System.out.println("0. Exit");
+	}
+
+	private static void printWelcomeMessage() {
+		System.out.println("===================================================================");
+		System.out.println("LOCKEDME.COM");
+		System.out.println();
+		System.out.println("Welcome to Digital Locker, Store your creds here");
+		System.out.println();
+		System.out.println("Developed by: Pooja Choudhary");
+		System.out.println("===================================================================");
+		System.out.println();
 	}
 
 	private static void fetchCredentials(String loginId, String userSiteInput)

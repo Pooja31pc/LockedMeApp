@@ -207,7 +207,7 @@ public class LockedMeApp {
 		writer.close();
 		reader.close();
 		if(!flag) {
-			System.out.println("This site doesn't exist");
+			System.out.println("This site doeson't exist");
 		}else {
 			inputFile.delete();
 			boolean successful = tempFile.renameTo(inputFile);
@@ -231,7 +231,7 @@ public class LockedMeApp {
 	}
 
 	private static boolean doAlreadyExists(String siteName, BufferedReader fileReader) throws IOException {
-		String st = fileReader.readLine();
+		String st = null;
 
 
 
